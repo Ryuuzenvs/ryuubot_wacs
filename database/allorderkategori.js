@@ -1,0 +1,49 @@
+{
+  "private_reguler": [
+    { "id": "pr_1d", "name": "Private Reguler 1 Hari", "price": 100 },
+    { "id": "pr_3d", "name": "Private Reguler 3 Hari", "price": 300 },
+    { "id": "pr_1w", "name": "Private Reguler 1 Minggu (Diskon)", "price": 600 },
+    { "id": "pr_1m", "name": "Private Reguler 1 Bulan (Best Value)", "price": 2500 },
+    { "id": "pr_perm", "name": "Private Reguler PERMANEN", "price": 10000 }
+  ],
+  "private_premium": [
+    { "id": "pp_1d", "name": "Private Premium 1 Hari", "price": 250 },
+    { "id": "pp_3d", "name": "Private Premium 3 Hari", "price": 750 },
+    { "id": "pp_1w", "name": "Private Premium 1 Minggu (Diskon)", "price": 1500 },
+    { "id": "pp_1m", "name": "Private Premium 1 Bulan (Best Value)", "price": 6000 },
+    { "id": "pp_perm", "name": "Private Premium PERMANEN", "price": 25000 }
+  ],
+  "limit_promo": [
+    { "id": "lim_100", "name": "100 Limit", "price": 1000 },
+    { "id": "lim_1000", "name": "1.000 Limit", "price": 5000 },
+    { "id": "lim_5000", "name": "5.000 Limit", "price": 15000 }
+  ],
+  "money_bot": [
+    { "id": "mon_1k", "name": "1.000 Money", "price": 1000 },
+    { "id": "mon_10k", "name": "10.000 Money", "price": 5000 },
+    { "id": "mon_15k", "name": "15.000 Money", "price": 10000 },
+    { "id": "mon_25k", "name": "25.000 Money", "price": 15000 },
+    { "id": "mon_35k", "name": "35.000 Money", "price": 25000 }
+  ],
+  "sewa_bot_group": [
+    { "id": "sw_reg_1d", "name": "Sewa Reguler 1 Hari", "price": 300 },
+    { "id": "sw_reg_1w", "name": "Sewa Reguler 1 Minggu", "price": 2000 },
+    { "id": "sw_reg_1m", "name": "Sewa Reguler 1 Bulan", "price": 7000 },
+    { "id": "sw_reg_perm", "name": "Sewa Reguler PERMANEN", "price": 25000 },
+    { "id": "sw_prem_1d", "name": "Sewa Premium 1 Hari", "price": 1000 },
+    { "id": "sw_prem_1w", "name": "Sewa Premium 1 Minggu", "price": 5000 },
+    { "id": "sw_prem_1m", "name": "Sewa Premium 1 Bulan", "price": 15000 },
+    { "id": "sw_prem_perm", "name": "Sewa Premium PERMANEN", "price": 50000 }
+  ],
+  "jadi_bot_clone": [
+    { "id": "jb_1w", "name": "Jadi Bot 1 Minggu", "price": 5000 },
+    { "id": "jb_1m", "name": "Jadi Bot 1 Bulan", "price": 15000 },
+    { "id": "jb_perm", "name": "Jadi Bot PERMANEN", "price": 40000 }
+  ],
+  "panel_pterodactyl": [
+    { "id": "pnl_1gb", "name": "Panel Ram 1GB", "price": 1000 },
+    { "id": "pnl_2gb", "name": "Panel Ram 2GB", "price": 2000 },
+    { "id": "pnl_4gb", "name": "Panel Ram 4GB", "price": 4000 },
+    { "id": "pnl_unli", "name": "Panel Ram Unlimited", "price": 10000 }
+  ]
+}
