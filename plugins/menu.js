@@ -34,18 +34,6 @@ module.exports = async (sock, m, chat) => {
         const messageOptions = {
             text: menuText,
             mentions: [sender],
-            contextInfo: {
-                forwardingScore: 999,
-                isForwarded: true,
-                externalAdReply: {
-                    title: botName,
-                    body: "🚀 Active on Linux Mint i3",
-                    thumbnail: imageBuffer, // Akan null kalau gak ada gambar, it's okay
-                    sourceUrl: "https://wa.me/" + config.ownerNumber.split('@')[0],
-                    mediaType: 1,
-                    renderLargerThumbnail: true
-                }
-            }
         };
 
         console.log(`[DEBUG] Attempting to send message...`);
