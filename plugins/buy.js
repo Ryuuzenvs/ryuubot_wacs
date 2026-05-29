@@ -6,9 +6,9 @@ module.exports = async (sock, m, chat) => {
 
     if (command !== "buy") return;
 
-    const idTarget = args[0];
+    let idTarget = args[0];
     if (!idTarget) {
-        return await sock.sendMessage(sender, { text: `_Mohon masukkan ID Produk._\n_Contoh: *${prefix}buy lim_1000*_` }, { quoted: m });
+        return await sock.sendMessage(sender, { text: `_Mohon masukkan ID atau Nomor Produk._\n_Contoh: *${prefix}buy 12* atau *${prefix}buy lim_1000*_` }, { quoted: m });
     }
 
     // Ambil database produk
@@ -18,18 +18,38 @@ module.exports = async (sock, m, chat) => {
     }
     const dbProduk = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 
-    // Cari produk berdasarkan ID
+    // ─── LOGIKA DETEKSI ID STR vs NUMBER ID ───
     let produkDitemukan = null;
-    for (const kategori in dbProduk) {
-        const cari = dbProduk[kategori].find(item => item.id === idTarget);
-        if (cari) {
-            produkDitemukan = cari;
-            break;
+    const isNumber = /^\d+$/.test(idTarget); // Cek apakah input full angka
+
+    if (isNumber) {
+        const targetNumber = parseInt(idTarget);
+        let currentCounter = 1;
+
+        // Loop untuk melacak kecocokan nomor urut
+        for (const kategori in dbProduk) {
+            for (const item of dbProduk[kategori]) {
+                if (currentCounter === targetNumber) {
+                    produkDitemukan = item;
+                    break;
+                }
+                currentCounter++;
+            }
+            if (produkDitemukan) break;
+        }
+    } else {
+        // Jika input berupa ID string asli (misal: sw_reg_1d)
+        for (const kategori in dbProduk) {
+            const cari = dbProduk[kategori].find(item => item.id === idTarget);
+            if (cari) {
+                produkDitemukan = cari;
+                break;
+            }
         }
     }
 
     if (!produkDitemukan) {
-        return await sock.sendMessage(sender, { text: `_ID Produk *${idTarget}* tidak valid._` }, { quoted: m });
+        return await sock.sendMessage(sender, { text: `_Produk dengan identifier *${idTarget}* tidak ditemukan._` }, { quoted: m });
     }
 
     // Cek status orderan user yang masih menggantung
@@ -56,7 +76,7 @@ module.exports = async (sock, m, chat) => {
         expiry: waktuSekarang + (durasiMenit * 60 * 1000)
     };
 
-    // Kirim QRIS Polosan (Tanpa AdReply / Button biar anti-ghosting)
+    // Kirim QRIS Polosan
     const pathQRIS = path.resolve("./assets/qris.jpg");
     if (!fs.existsSync(pathQRIS)) {
         return await sock.sendMessage(sender, { text: "_Error: File qris.jpg tidak ditemukan di folder assets._" }, { quoted: m });
@@ -77,7 +97,7 @@ module.exports = async (sock, m, chat) => {
         caption: captionQRIS
     }, { quoted: m });
 
-    console.log(`[ORDER] Sesi dibuat untuk ${sender} -> ID: ${trxId}`);
+    console.log(`[ORDER] Sesi dibuat untuk ${sender} -> ID: ${trxId} (Via Identifier: ${idTarget})`);
 
     // Auto-timeout Cleaner Sesi
     setTimeout(async () => {

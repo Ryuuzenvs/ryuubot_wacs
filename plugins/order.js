@@ -12,7 +12,7 @@ module.exports = async (sock, m, chat) => {
     }
     const dbProduk = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 
-    // TAMPILKAN DAFTAR KATEGORI UTAMA (.order)
+    // ─── KONDISI A: DAFTAR KATEGORI UTAMA (.order) ───
     if (args.length === 0) {
         let menuText = `*─── 🛒 DAFTAR KATEGORI PRODUK ───*\n\n`;
         menuText += `Halo @${sender.split("@")[0]}, silakan pilih kategori dengan mengetik perintah di bawah ini:\n\n`;
@@ -27,7 +27,7 @@ module.exports = async (sock, m, chat) => {
         return await sock.sendMessage(sender, { text: menuText, mentions: [sender] }, { quoted: m });
     }
 
-    // TAMPILKAN DETAIL PRODUK DI DALAM KATEGORI (.order [kategori])
+    // ─── KONDISI B: DETAIL PRODUK DI DALAM KATEGORI (.order [kategori]) ───
     if (args.length > 0) {
         const kategoriTarget = args[0].toLowerCase();
 
@@ -38,14 +38,25 @@ module.exports = async (sock, m, chat) => {
         const listProduk = dbProduk[kategoriTarget];
         let detailText = `*─── 📦 DETAIL KATEGORI: ${kategoriTarget.replace(/_/g, " ").toUpperCase()} ───*\n\n`;
         
+        // Logika pencarian nomor urut global berdasarkan index kategori di JSON
+        let globalCounter = 1;
+        for (const kategori in dbProduk) {
+            if (kategori === kategoriTarget) {
+                break;
+            }
+            globalCounter += dbProduk[kategori].length; // Lewati item dari kategori sebelumnya
+        }
+
         listProduk.forEach((item) => {
-            detailText += `📌 *${item.name}*\n`;
+            detailText += `*${globalCounter}. ${item.name}*\n`;
             detailText += ` ├ Harga: Rp ${item.price.toLocaleString("id-ID")}\n`;
-            detailText += ` └ Ketik untuk Beli: *${prefix}buy ${item.id}*\n\n`;
+            detailText += ` ├ ID Produk: \`${item.id}\`\n`;
+            detailText += ` └ Ketik: *${prefix}buy ${globalCounter}* atau *${prefix}buy ${item.id}*\n\n`;
+            globalCounter++;
         });
 
         detailText += `───────────────\n`;
-        detailText += `_Silakan ketik atau salin teks perintah *${prefix}buy [id_produk]* di atas untuk memicu invoice QRIS._`;
+        detailText += `_Silakan ketik nomor atau ID produk di atas untuk memicu invoice QRIS._`;
 
         return await sock.sendMessage(sender, { text: detailText }, { quoted: m });
     }
