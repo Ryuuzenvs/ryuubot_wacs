@@ -1,12 +1,17 @@
-const fs = require("fs");
-const path = require("path");
-const config = require("./config");
+const colors = require("./lib/colors");
 
 module.exports = async (sock, m) => {
+    // Mulai hitung total waktu pemrosesan handler
+    const startHandlerTime = performance.now();
+    
     try {
         if (!m.message) return;
 
-        // Mendapatkan isi pesan (Body)
+        const waktu = colors.chalk.dim(`[${new Date().toLocaleTimeString('id-ID', { hour12: false })}]`);
+        const tagHandler = colors.chalk.bold.magenta("[HANDLER]");
+
+        // ⏱️ CHECKPOINT 1: Parsing Body & Message Type
+        const startParsing = performance.now();
         const type = Object.keys(m.message)[0];
         const body = (type === 'conversation') ? m.message.conversation : 
                      (type === 'extendedTextMessage') ? m.message.extendedTextMessage.text : 
@@ -15,40 +20,77 @@ module.exports = async (sock, m) => {
 
         const prefix = /^[./!#]/.test(body) ? body[0] : null;
 
-        // FIX: Jika pesan dari diri sendiri (fromMe) TAPI tidak pakai prefix command, kita abaikan.
-        // Ini mencegah bot merespon chat ketikan biasa dari diri sendiri / mencegah looping response.
         if (m.key.fromMe && !prefix) return;
 
-        // Tambah Variable Waktu Jam:Menit:Detik
-        const waktu = new Date().toLocaleTimeString('id-ID', { hour12: false });
-        console.log(`[${waktu}] [HANDLER] Ada pesan masuk: ${body}`); 
+        const trimmedBody = body.trim();
+        const command = prefix ? trimmedBody.slice(1).trim().split(/ +/).shift().toLowerCase() : '';
+        const args = trimmedBody.split(/ +/).slice(1);
+        const endParsing = performance.now();
+        // ------------------------------------------
 
         const sender = m.key.remoteJid;
         const isGroup = sender.endsWith('@g.us');
 
-        // Simple Chat Object buat dikirim ke plugin
-        const chat = {
-            sender: sender, 
-            body: body,
-            prefix: prefix,
-            command: body.slice(1).trim().split(/ +/).shift().toLowerCase(),
-            args: body.trim().split(/ +/).slice(1),
-            isImage: type === 'imageMessage',
-            isGroup: isGroup
-        };
-
-        // SCAN & EXECUTE PLUGINS
-        const pluginPath = path.join(__dirname, "plugins");
-        const pluginFiles = fs.readdirSync(pluginPath).filter(file => file.endsWith(".js"));
-        console.log(`[${waktu}] [HANDLER] Menemukan ${pluginFiles.length} plugin: ${pluginFiles.join(', ')}`);
-
-        for (const file of pluginFiles) {
-            const plugin = require(path.join(pluginPath, file));
-            // Panggil fungsi plugin (Export Function Model)
-            await plugin(sock, m, chat);
+        if (m.key.fromMe) {
+            console.log(`\n${waktu} ${tagHandler} ┌ 📬 ${colors.chalk.yellow("Bot Response:")} ${colors.chalk.italic(body || '[Media/Button]')}`);
+        } else {
+            console.log(`\n${waktu} ${tagHandler} ┌ 📩 ${colors.chalk.cyan("Pesan Masuk:")} ${body}`);
         }
 
+        const chat = { sender, body, prefix, command, args, isImage: type === 'imageMessage', isGroup };
+
+        // Tampilkan hasil parsing data awal
+        console.log(`${waktu} ${tagHandler} ├ ⏱️  [CP 1] Parsing & Regex: ${colors.chalk.yellow((endParsing - startParsing).toFixed(3) + ' ms')}`);
+
+        // =====================================================================
+        // 🔥 INTERSEPTOR BUKTI TRANSFER PEMBAYARAN (MILESTONE 3)
+        // =====================================================================
+        if (global.active_orders[sender] && global.active_orders[sender].status === "WAIT_PAID" && chat.isImage) {
+            console.log(`${waktu} ${tagHandler} ├ 💳 Mendeteksi kiriman citra dari user dalam sesi WAIT_PAID.`);
+            
+            const { validatePayment } = require("./lib/paymentValidator");
+            
+            console.log(`${waktu} ${tagHandler} ├ 🚀 Running External Utility: paymentValidator.js`);
+            const startValidator = performance.now();
+            
+            // Eksekusi fungsi eksternal utilitas
+            await validatePayment(sock, m, chat);
+            
+            const endValidator = performance.now();
+            console.log(`${waktu} ${tagHandler} └ ✔️  Selesai diproses via Validator. Total: ${colors.chalk.green((endValidator - startHandlerTime).toFixed(3) + ' ms')}`);
+            return; // STOP FLOW DISINI agar tidak lanjut mencari command plugin biasa!
+        }
+        // =====================================================================
+
+        // ⏱️ CHECKPOINT 2: Eksekusi File Plugin
+        if (prefix && command) {
+            const targetPluginFile = `${command}.js`;
+            const plugin = global.plugins[targetPluginFile];
+
+            if (typeof plugin === "function") {
+                console.log(`${waktu} ${tagHandler} ├ 🚀 Running Plugin: ${colors.chalk.green(targetPluginFile)}`);
+                
+                const startPlugin = performance.now();
+                
+                // Eksekusi fungsi internal plugin kamu
+                await plugin(sock, m, chat);
+                
+                const endPlugin = performance.now();
+                console.log(`${waktu} ${tagHandler} ├ ⏱️  [CP 2] Internal Plugin Logic: ${colors.chalk.red((endPlugin - startPlugin).toFixed(3) + ' ms')}`);
+            } else {
+                console.log(`${waktu} ${tagHandler} ├ ⚠️  Command ${colors.chalk.yellow('.' + command)} tidak terdaftar.`);
+            }
+        } else {
+            console.log(`${waktu} ${tagHandler} ├ 💬 Chat biasa, mengabaikan plugin.`);
+        }
+
+        // ⏱️ CHECKPOINT 3: Total End-to-End Execution
+        const totalHandlerTime = performance.now() - startHandlerTime;
+        console.log(`${waktu} ${tagHandler} └ ✔️  Selesai diproses. Total: ${colors.chalk.green(totalHandlerTime.toFixed(3) + ' ms')}`);
+
     } catch (err) {
-        console.error("Handler Error:", err);
+        const waktu = colors.chalk.dim(`[${new Date().toLocaleTimeString('id-ID', { hour12: false })}]`);
+        const tagHandler = colors.chalk.bold.red("[HANDLER ERROR]");
+        console.error(`${waktu} ${tagHandler} └ ❌ Gagal memproses:`, err);
     }
 };

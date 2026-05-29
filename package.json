@@ -11,7 +11,7 @@
   "description": "",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "ourin": "https://github.com/LuckyArch/OurinGlitch-Baileys/archive/refs/heads/main.tar.gz",
+"@whiskeysockets/baileys": "^6.6.0",
     "chalk": "^4.1.2",
     "pino": "^10.3.1",
     "qrcode-terminal": "^0.12.0"

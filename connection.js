@@ -5,7 +5,7 @@ const {
   fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
   jidDecode
-} = require("ourin"); // Tetap pakai ourin
+} = require("@whiskeysockets/baileys"); // <-- Kembalikan ke yang ori
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
 const fs = require("fs");
@@ -50,7 +50,8 @@ async function connectToWhatsApp() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 3000));
         
-        const code = await sock.requestPairingCode(phoneNumber, customDeviceName);
+        //const code = await sock.requestPairingCode(phoneNumber, customDeviceName);
+        const code = await sock.requestPairingCode(phoneNumber);
         
         console.log("");
         console.log(
