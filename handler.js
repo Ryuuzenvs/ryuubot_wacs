@@ -30,14 +30,34 @@ module.exports = async (sock, m) => {
 
         const sender = m.key.remoteJid;
         const isGroup = sender.endsWith('@g.us');
+        
+        // 🛠️ LOGIK AMBIL NOMOR & NAMA GRUP
+        // Ambil nomor pengirim asli (jika grup, ambil dari m.key.participant, jika pribadi dari sender)
+        const realSenderJid = isGroup ? m.key.participant : sender;
+        const senderNumber = realSenderJid ? realSenderJid.split('@')[0] : 'Unknown';
+        
+        let chatTypeInfo = "";
+        if (isGroup) {
+            // Ambil nama grup dari cache sock.chats jika tersedia
+            const groupMetadata = sock.chats?.[sender] || await sock.groupMetadata?.(sender).catch(() => null);
+            const groupName = groupMetadata?.subject || "Nama Grup Tidak Diketahui";
+            chatTypeInfo = `${colors.chalk.bold.green("[GROUP]")} -> ${colors.chalk.cyan(groupName)}`;
+        } else {
+            chatTypeInfo = `${colors.chalk.bold.blue("[PRIVATE]")}`;
+        }
+        // ------------------------------------------
 
+        // Cetak Log Header Pesan Masuk / Keluar
         if (m.key.fromMe) {
             console.log(`\n${waktu} ${tagHandler} ┌ 📬 ${colors.chalk.yellow("Bot Response:")} ${colors.chalk.italic(body || '[Media/Button]')}`);
         } else {
             console.log(`\n${waktu} ${tagHandler} ┌ 📩 ${colors.chalk.cyan("Pesan Masuk:")} ${body}`);
         }
+        
+        // Cetak Log Info Pengirim (Fitur Baru)
+        console.log(`${waktu} ${tagHandler} ├ 👤 Sender: ${colors.chalk.magenta(senderNumber)} ${chatTypeInfo}`);
 
-        const chat = { sender, body, prefix, command, args, isImage: type === 'imageMessage', isGroup };
+        const chat = { sender, body, prefix, command, args, isImage: type === 'imageMessage', isGroup, senderNumber };
 
         // Tampilkan hasil parsing data awal
         console.log(`${waktu} ${tagHandler} ├ ⏱️  [CP 1] Parsing & Regex: ${colors.chalk.yellow((endParsing - startParsing).toFixed(3) + ' ms')}`);
