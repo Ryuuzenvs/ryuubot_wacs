@@ -1,14 +1,15 @@
 module.exports = {
     botName: "RYUU BOT CS",
-    ownerNumber: "6285188451841", // Ganti dengan nomor kamu
+    ownerNumber: "180243436409031", // Ganti dengan nomor kamu
 //    ownerNumber: "6285293726774", // Ganti dengan nomor kamu
-    mainBotJID: "6285188451841@s.whatsapp.net",  // JID Bot Utama yang handle QRIS
+    mainBotJID: "6285293726774@s.whatsapp.net",  // JID Bot Utama yang handle QRIS
 //    mainBotJID: "6285293726774@s.whatsapp.net",  // JID Bot Utama yang handle QRIS
-    ownerGroup: "120363407471586477@g.us",         // ID Grup tempat Owner dapet laporan
+    ownerGroup: "180243436409031@g.us",         // ID Grup tempat Owner dapet laporan
+    chId: "120363427206661375",
     
     // Fitur
     usePairingCode: true,
-    pairingNumber: "6285188451841", // Nomor yang mau dijadiin Bot CS
+    pairingNumber: "6285293726774", // Nomor yang mau dijadiin Bot CS
 //    pairingNumber: "6285293726774", // Nomor yang mau dijadiin Bot CS
     
     // Database Sederhana
@@ -25,7 +26,7 @@ module.exports = {
     session: {
         folderName: "session",
         usePairingCode: true,
-        pairingNumber: "6285188451841",
+        pairingNumber: "6285293726774",
 //        pairingNumber: "6285293726774",
         printQRInTerminal: false,
         maxReconnectAttempts: 10,

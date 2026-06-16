@@ -18,6 +18,9 @@ function loadPlugins() {
         if (!fs.existsSync(pluginPath)) fs.mkdirSync(pluginPath);
         const pluginFiles = fs.readdirSync(pluginPath).filter(file => file.endsWith(".js"));
         
+        // Bersihkan object global lama sebelum me-load ulang
+        global.plugins = {};
+
         for (const file of pluginFiles) {
             const actualPath = path.join(pluginPath, file);
             delete require.cache[require.resolve(actualPath)];
@@ -34,6 +37,16 @@ async function startBot() {
     try {
         // Load semua file plugin ke RAM dulu
         loadPlugins();
+
+        // 🔄 FITUR OPTIMALISASI: Watch folder plugins untuk Auto-Reload (Hot Reload)
+        const pluginPath = path.join(__dirname, "plugins");
+        fs.watch(pluginPath, (eventType, filename) => {
+            if (filename && filename.endsWith(".js")) {
+                const waktu = colors.chalk.dim(`[${new Date().toLocaleTimeString('id-ID', { hour12: false })}]`);
+                console.log(`${waktu} ${colors.chalk.bold.yellow("[SYSTEM]")} Perubahan terdeteksi pada file: ${filename}. Reloading plugins...`);
+                loadPlugins();
+            }
+        });
         
         // FIX: Cek apakah yang diexport itu bentuk fungsi langsung atau di dalam objek
         const connect = typeof connectionModule === "function" 

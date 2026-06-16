@@ -30,10 +30,19 @@ module.exports = async (sock, m) => {
 
         const sender = m.key.remoteJid;
         const isGroup = sender.endsWith('@g.us');
+
+        // 🛠️ LOGIK AMBIL NOMOR & NAMA GRUP (FIXED FOR @LID PRIVACY ACCOUNT)
+        // Jika grup, ambil dari participantPn (Phone Number) jika ada, kalau tidak ada baru fallback ke participant reguler
+        let realSenderJid = isGroup ? (m.key.participantPn || m.key.participant || sender) : sender;
         
-        // 🛠️ LOGIK AMBIL NOMOR & NAMA GRUP
-        // Ambil nomor pengirim asli (jika grup, ambil dari m.key.participant, jika pribadi dari sender)
-        const realSenderJid = isGroup ? m.key.participant : sender;
+        // Pastikan kalau isinya masih berakhiran @lid, kita bersihkan atau biarkan jid aslinya aman
+        if (isGroup && m.key.participantPn) {
+            realSenderJid = m.key.participantPn;
+        } else if (!isGroup && sender.endsWith('@lid')) {
+            // Jika chat personal tapi pakai ID privacy, gunakan nomor asli dari info internal jika tersedia
+            realSenderJid = m.key.participantPn || sender;
+        }
+
         const senderNumber = realSenderJid ? realSenderJid.split('@')[0] : 'Unknown';
         
         let chatTypeInfo = "";
