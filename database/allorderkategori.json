@@ -11,6 +11,22 @@
     { "id": "mon_25k", "name": "25.000 Money", "price": 15000 },
     { "id": "mon_35k", "name": "35.000 Money", "price": 25000 }
   ],
+  "premuser": [
+    { "id": "prem_1d", "name": "Premium User 1 Hari", "price": 200 },
+    { "id": "prem_3d", "name": "Premium User 3 Hari", "price": 600 },
+    { "id": "prem_1w", "name": "Premium User 1 Minggu", "price": 1400 },
+    { "id": "prem_1m", "name": "Premium User 1 Bulan", "price": 4400 },
+    { "id": "prem_perm", "name": "Premium User PERMANEN", "price": 20000 }
+  ],
+  "paid_gc": [
+    { "id": "pgc_1d", "name": "Paid GC 1 Hari", "price": 500 },
+    { "id": "pgc_3d", "name": "Paid GC 3 Hari", "price": 1000 },
+    { "id": "pgc_7d", "name": "Paid GC 7 Hari", "price": 2000 },
+    { "id": "pgc_10d", "name": "Paid GC 10 Hari", "price": 3000 },
+    { "id": "pgc_30d", "name": "Paid GC 30 Hari", "price": 5000 },
+    { "id": "pgc_90d", "name": "Paid GC 90 Hari", "price": 10000 },
+    { "id": "pgc_perm", "name": "Paid GC PERMANEN", "price": 30000 }
+  ],
   "sewa_bot_group": [
     { "id": "sw_reg_1d", "name": "Sewa Reguler 1 Hari", "price": 300 },
     { "id": "sw_reg_1w", "name": "Sewa Reguler 1 Minggu", "price": 2000 },
@@ -21,10 +37,40 @@
     { "id": "sw_prem_1m", "name": "Sewa Premium 1 Bulan", "price": 15000 },
     { "id": "sw_prem_perm", "name": "Sewa Premium PERMANEN", "price": 50000 }
   ],
+  "only_rvo": [
+    { "id": "rvo_reg_5x", "name": "RVO Reguler 5x", "price": 400 },
+    { "id": "rvo_reg_10x", "name": "RVO Reguler 10x", "price": 500 },
+    { "id": "rvo_reg_15x", "name": "RVO Reguler 15x", "price": 800 },
+    { "id": "rvo_reg_20x", "name": "RVO Reguler 20x", "price": 1000 },
+    { "id": "rvo_reg_25x", "name": "RVO Reguler 25x", "price": 1200 },
+    { "id": "rvo_reg_perm", "name": "RVO Reguler PERMANEN", "price": 10000 },
+    { "id": "rvo_prem_5x", "name": "RVO Premium 5x", "price": 1200 },
+    { "id": "rvo_prem_10x", "name": "RVO Premium 10x", "price": 1500 },
+    { "id": "rvo_prem_15x", "name": "RVO Premium 15x", "price": 2400 },
+    { "id": "rvo_prem_20x", "name": "RVO Premium 20x", "price": 3000 },
+    { "id": "rvo_prem_25x", "name": "RVO Premium 25x", "price": 3600 },
+    { "id": "rvo_prem_perm", "name": "RVO Premium PERMANEN", "price": 30000 }
+  ],
   "jadi_bot_and_owner": [
     { "id": "jb_1w", "name": "Jadi Bot 1 Minggu", "price": 5000 },
     { "id": "jb_1m", "name": "Jadi Bot 1 Bulan", "price": 15000 },
     { "id": "jb_perm", "name": "Jadi Bot PERMANEN", "price": 40000 }
+  ],
+  "bikin_bot_full": [
+    { "id": "bb_1w", "name": "Bikin Bot Full Fitur 1 Minggu", "price": 7000 },
+    { "id": "bb_1m", "name": "Bikin Bot Full Fitur 1 Bulan", "price": 20000 },
+    { "id": "bb_perm", "name": "Bikin Bot Full Fitur PERMANEN", "price": 50000 }
+  ],
+  "limit_bikin_bot": [
+    { "id": "lbb_1k", "name": "1.000 Limit Bikin Bot", "price": 5000 },
+    { "id": "lbb_2k", "name": "2.000 Limit Bikin Bot", "price": 8000 },
+    { "id": "lbb_5k", "name": "5.000 Limit Bikin Bot", "price": 16000 },
+    { "id": "lbb_10k", "name": "10.000 Limit Bikin Bot", "price": 25000 },
+    { "id": "lbb_20k", "name": "20.000 Limit Bikin Bot", "price": 40000 }
+  ],
+  "nokos": [
+    { "id": "nks_indo", "name": "Nokos INDO", "price": 5000 },
+    { "id": "nks_luar", "name": "Nokos LUAR (Tergantung Negara)", "price": 7000 }
   ],
   "panel": [
     { "id": "pnl_1gb", "name": "Panel Ram 1GB", "price": 1000 },

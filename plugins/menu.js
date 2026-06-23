@@ -24,9 +24,9 @@ module.exports = async (sock, m, chat) => {
 
         let menuText = `Selamat Datang di *${botName}* 🤖\n`;
         menuText += `Halo @${sender.split('@')[0]}, ada yang bisa kami bantu?\n\n`;
-        menuText += `1️⃣ *.order* (Cek Pricelist)\n`;
-        menuText += `2️⃣ *.rules* (Peraturan Bot)\n`;
-        menuText += `3️⃣ *.owner* (Hubungi Admin)\n\n`;
+        menuText += ` *.produk* (Cek Pricelist)\n`;
+        menuText += ` *.rules* (Peraturan Bot)\n`;
+        menuText += ` *.owner* (Hubungi Admin)\n\n`;
         menuText += `_Gunakan menu di atas untuk layanan cepat._`;
 
         // Kita coba pake struktur sendMessage yang paling stabil (Text with AdReply)

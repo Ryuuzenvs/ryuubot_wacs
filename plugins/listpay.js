@@ -1,25 +1,28 @@
 const config = require("../config");
 
 module.exports = async (sock, m, chat) => {
+    // Ambil sender dan senderNumber dari objek chat
     const { sender, senderNumber, command } = chat;
 
-    // Ambil string nomor owner asli dari config untuk perbandingan log
-    const cleanConfigOwner = config.ownerNumber.replace("@s.whatsapp.net", "").trim();
-    const cleanSenderNumber = senderNumber ? senderNumber.trim() : "NOT_FOUND";
+    // Bersihkan nomor owner dari config (hanya ambil angka saja)
+    const cleanConfigOwner = config.ownerNumber.replace(/\D/g, "").trim();
+    // Bersihkan nomor pengirim dari chat (hanya ambil angka saja)
+    const cleanSenderNumber = senderNumber ? senderNumber.replace(/\D/g, "").trim() : "NOT_FOUND";
 
     // Cek kecocokan status owner
     const isOwner = cleanSenderNumber === cleanConfigOwner;
 
-    // ─── DEBUGGING CONSOLE (Intip di Terminal Linux Mint Kamu) ───
-    console.log("\n=========== DEBUG LISTPAY ===========");
+    // ─── DEBUGGING CONSOLE ───
+    console.log("\n=========== DEBUG LISTPAY (FIXED LID) ===========");
     console.log(`• Command Diterima : .${command}`);
+    console.log(`• JID Pengirim      : "${sender}"`);
     console.log(`• Nomor Pengirim    : "${cleanSenderNumber}"`);
     console.log(`• Nomor Owner Config: "${cleanConfigOwner}"`);
-    console.log(`• Apakah Cocok (Match): ${isOwner}`);
-    console.log(`• Total Semua Order di RAM: ${Object.keys(global.active_orders || {}).length}`);
-    console.log("=====================================\n");
+    console.log(`• Apakah Cocok      : ${isOwner}`);
+    console.log(`• Total Order di RAM: ${Object.keys(global.active_orders || {}).length}`);
+    console.log("=================================================\n");
 
-    // Jika ternyata nomor pengirim tidak cocok dengan owner, bot akan kasih tahu lewat chat (Biar ketahuan melesetnya di mana)
+    // Jika tidak cocok, tolak request
     if (!isOwner) {
         return await sock.sendMessage(sender, { 
             text: `🚫 *[DEBUG SECURITY]*\n\nCommand ditolak karena Anda bukan owner.\n• Nomor Anda: *${cleanSenderNumber}*\n• Target Owner: *${cleanConfigOwner}*` 
